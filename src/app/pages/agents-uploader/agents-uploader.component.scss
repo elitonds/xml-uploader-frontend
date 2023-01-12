@@ -1,0 +1,32 @@
+.file-field {
+  display: none;
+}
+
+.title{
+  display: flex;
+  justify-content: center;
+  font-size: 30px;
+  height: 50px;
+  align-items: center;
+}
+
+label {
+  width: 500px;
+  height: 400px;
+  background-color: rgb(5, 4, 68);
+  color: #fff;
+  display: flex;
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: auto;
+  border-style: dashed;
+  border-radius: 5%;
+  border-color: rgb(184, 182, 182);
+  justify-content: center;
+  align-items: center;
+}
+.upload-icon {
+  font-size: 50px;
+  height: auto;
+  width: auto;
+}

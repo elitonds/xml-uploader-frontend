@@ -1,0 +1,18 @@
+<div>
+  <span class="title">XML Uploader</span>
+  <div>
+    <label for="files">
+      <mat-icon class="upload-icon">upload</mat-icon>
+    </label>
+    <input
+      class="file-field"
+      type="file"
+      (change)="readFileXml($event)"
+      name="arquivo"
+      #files
+      id="files"
+      multiple
+      accept=".xml"
+    />
+  </div>
+</div>
