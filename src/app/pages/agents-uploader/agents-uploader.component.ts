@@ -1,12 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { AgenteDTO } from 'src/app/pages/agents-uploader/dto/agente.dto';
-import { AgentsUploaderService } from './agents-uploader.service';
-import * as converter from 'xml-js';
-import { CompraDTO } from 'src/app/pages/agents-uploader/dto/compra.dto';
-import { RegiaoDTO } from 'src/app/pages/agents-uploader/dto/regiao.dto';
+import { map } from 'rxjs/operators';
 import { LoaderService } from 'src/app/loader/loader.service';
-import { map, catchError } from 'rxjs/operators';
+import { AgenteDTO } from 'src/app/pages/agents-uploader/dto/agente.dto';
+import { CompraGeracaoDTO } from 'src/app/pages/agents-uploader/dto/compra-geracao.dto';
+import * as converter from 'xml-js';
+import { AgentsUploaderService } from './agents-uploader.service';
 
 @Component({
   selector: 'app-agents',
@@ -36,7 +35,9 @@ export class AgentsUploaderComponent {
         const newArrayAgentes = Array.isArray(JSONData.agentes.agente)
           ? JSONData.agentes.agente
           : [JSONData.agentes.agente];
-          console.log(this.uploadAgentes(this.createAndSendData(newArrayAgentes)));
+        console.log(
+          this.uploadAgentes(this.createAndSendData(newArrayAgentes))
+        );
       };
       reader.readAsText(file);
     }
@@ -58,32 +59,34 @@ export class AgentsUploaderComponent {
     this.clearFileField();
   }
 
-  private processChildNodes(children: any): CompraDTO[] {
+  private processChildNodes(children: any, regiao: string): CompraGeracaoDTO[] {
     return children.map((child: any) => {
-      return { valor: child._text };
+      return { valor: child._text, regiao };
     });
   }
 
-  private processRegioes(regioes: any): RegiaoDTO[] {
-    const regioesDTO: RegiaoDTO[] = [];
+  private processRegioes(regioes: any, agenteDto: AgenteDTO) {
     regioes.forEach((regiao: any) => {
-      regioesDTO.push({
-        sigla: regiao._attributes.sigla,
-        comprasDTO: this.processChildNodes(regiao.compra.valor),
-        geracoesDTO: this.processChildNodes(regiao.geracao.valor),
-      });
+      agenteDto.compras.push(
+        ...this.processChildNodes(regiao.compra.valor, regiao._attributes.sigla)
+      );
+      agenteDto.geracoes.push(
+        ...this.processChildNodes(
+          regiao.geracao.valor,
+          regiao._attributes.sigla
+        )
+      );
     });
-    return regioesDTO;
   }
 
   private createAndSendData(agentes: any): AgenteDTO[] {
     return agentes.map((agente: any) => {
-      const regioesDTO = this.processRegioes(agente.regiao);
-      return new AgenteDTO(
+      const agenteDto = new AgenteDTO(
         parseInt(agente.codigo._text),
-        agente.data._text,
-        regioesDTO
+        agente.data._text
       );
+      this.processRegioes(agente.regiao, agenteDto);
+      return agenteDto;
     });
   }
 }

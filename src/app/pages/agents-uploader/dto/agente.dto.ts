@@ -1,15 +1,15 @@
-import { RegiaoDTO } from "./regiao.dto";
+import { CompraGeracaoDTO } from "./compra-geracao.dto";
 
 export class AgenteDTO {
     
-    codigo?: number;
-    data?: string;
-    regioes?: RegiaoDTO[] = [];
+    codigo: number;
+    data: string;
+    geracoes: CompraGeracaoDTO[] = [];
+    compras: CompraGeracaoDTO[] = [];
 
-    constructor(codigo: number, data: string, regioesDTO: RegiaoDTO[]) {
+    constructor(codigo: number, data: string) {
         this.codigo = codigo;
         this.data = data;
-        this.regioes = regioesDTO;
-    }
+    } 
 
 }
