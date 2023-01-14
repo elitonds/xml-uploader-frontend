@@ -35,9 +35,6 @@ export class AgentsUploaderComponent {
         const newArrayAgentes = Array.isArray(JSONData.agentes.agente)
           ? JSONData.agentes.agente
           : [JSONData.agentes.agente];
-        console.log(
-          this.uploadAgentes(this.createAndSendData(newArrayAgentes))
-        );
       };
       reader.readAsText(file);
     }
